@@ -1,0 +1,159 @@
+class_name ApplicationSingleton
+extends Node
+
+var THREAD_COUNT := OS.get_processor_count()
+
+signal pre_clear
+signal post_clear
+
+signal new_files_loaded
+
+signal load_subdirectories_changed(flag: bool)
+signal path_invalid(error: int)
+
+var currently_loaded_files: Array[ProcessedImage] = []
+
+var current_index := 0
+
+var thread_polling_timer: Timer
+var thread_workers: Array[ImageThreadWorker] = []
+
+var load_subdirectories: bool = true : 
+	set(val):
+		load_subdirectories = val 
+		load_subdirectories_changed.emit(val)
+		_entry_path_changed()
+
+var entry_path: String = "" : 
+	set(value):
+		var different: bool = entry_path != value
+		entry_path = value
+		if different:
+			_entry_path_changed()
+			
+func _ready() -> void:
+	
+	
+	thread_polling_timer = Timer.new()
+	thread_polling_timer.wait_time = 0.05
+
+	
+	for i in range(THREAD_COUNT):
+		thread_workers.append(ImageThreadWorker.new())
+	
+	add_child(thread_polling_timer)
+	
+	thread_polling_timer.timeout.connect(_poll_threads)
+	thread_polling_timer.paused = false
+	thread_polling_timer.start()
+
+	
+	
+func _poll_threads() -> void:
+	
+	for worker in thread_workers:
+		worker.check_for_work()
+
+
+func threaded_load_image(path: String, callback: Callable) -> void:
+	
+	var worktask := ImageThreadWorkerTask.new(callback, path)
+	
+	# FInd a non working thread
+	
+	for worker in thread_workers:
+		if worker.current_work_item == null:
+			worker.add_item_to_queue(worktask)
+			return
+			
+	# If we have no free worker sample a random one where we assign the work
+	
+	var worker : ImageThreadWorker = thread_workers.pick_random()
+	worker.add_item_to_queue(worktask)
+	
+
+func _entry_path_changed() -> void:
+	clear()
+	
+	# Check if the entry_path is valid (not "")
+	if entry_path == "":
+		return 
+		
+	# Try to load the directory
+	var dir := DirAccess.open(entry_path)
+	
+	var error := DirAccess.get_open_error()
+	
+	# If there was an error return and emit error signal
+	if error != OK:
+		path_invalid.emit(error)
+		return
+		
+	var file_list := Utilities.recursively_load_all_image_files(dir, load_subdirectories)
+	
+	# Now create the ProcessedImages instances
+	for file_path in file_list:
+		
+		var image := ProcessedImage.new(current_index, file_path)
+		currently_loaded_files.append(image)
+		current_index += 1
+		
+	new_files_loaded.emit()
+	
+func clear() -> void:
+	pre_clear.emit()
+	currently_loaded_files.clear()
+	current_index = 0
+	post_clear.emit()
+
+class ImageThreadWorkerTask extends Resource:
+	var callback: Callable
+	var path: String 
+	
+	func _init(callback: Callable, path: String) -> void:
+		self.path = path
+		self.callback = callback
+
+class ImageThreadWorker extends Resource:
+	
+	var working_queue: Array[ImageThreadWorkerTask] = []
+	var current_work_item: ImageThreadWorkerTask = null
+	
+	var thread: Thread
+	
+	func _init() -> void:
+		thread = Thread.new()
+
+	
+	func add_item_to_queue(item: ImageThreadWorkerTask) -> void:
+		working_queue.append(item)
+		check_for_work()
+	
+	func check_for_work():
+		
+		# If we are currently working on an item, check if we have finished that, if so clear it
+		if current_work_item != null:
+			if !thread.is_alive():
+				var image := thread.wait_to_finish() as ImageTexture
+
+				current_work_item.callback.call(image)
+				
+				current_work_item = null
+				check_for_work()
+		# If we are not working on an item, check íf we can start working on a new item
+		else:
+			if working_queue.size() > 0:
+				current_work_item = working_queue.pop_back() as ImageThreadWorkerTask
+				thread = Thread.new()
+				
+				thread.start(load_image_texture.bind(current_work_item.path))
+				
+	
+	func load_image_texture(path: String) -> ImageTexture:
+			
+		var loaded_image := Image.load_from_file(path)
+
+		if loaded_image:
+			return ImageTexture.create_from_image(loaded_image)
+		
+		return null
