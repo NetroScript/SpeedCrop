@@ -16,6 +16,7 @@ var original_texture : Texture2D = null
 var preview_texture : Texture2D = null
 
 var index: int = 0
+var total_rotations: int = 0
 
 var is_loading_image: bool = false
 
@@ -52,6 +53,8 @@ func rotate(direction: int) -> void:
 	if original_texture == null:
 		return 
 	
+	total_rotations -= direction * 2 - 1 
+	
 	var new_image = original_texture.get_image()
 	new_image.rotate_90(direction)
 	
@@ -68,22 +71,23 @@ func unload_image() -> bool:
 	
 	return false
 	
-func export_image(position: Rect2i) -> bool:
+func export_image(position: Rect2i) -> void:
 	
 	exported_section = position
 	
 	# We now have our image section, where we extract a new image
 	if original_texture != null:
-		var new_image := original_texture.get_image().get_region(position)
 		
-		# Now we resize that target region into the crop size we actually want
-		new_image.resize(Application.crop_to_size.x, Application.crop_to_size.y, Image.INTERPOLATE_LANCZOS)
+		Application.threaded_crop_image(
+			original_texture.get_image(),
+			position,
+			func(image: Image):
+				preview_texture = ImageTexture.create_from_image(image)
+				was_already_exported = true
+				was_exported.emit()
+		)
 		
-		preview_texture = ImageTexture.create_from_image(new_image)
-	
-		was_already_exported = true
-		was_exported.emit()
-	return false
+		
 
 func get_file_name() -> String:
 	return source_path.get_file()

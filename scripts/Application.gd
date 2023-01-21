@@ -107,19 +107,28 @@ func _poll_threads() -> void:
 func threaded_load_image(path: String, callback: Callable) -> void:
 	
 	var worktask := ImageThreadWorkerTask.new(callback, path)
+	var worker := select_worker()
+	worker.add_item_to_queue(worktask)
 	
-	# FInd a non working thread
+func threaded_crop_image(image: Image, size: Rect2i, callback: Callable) -> void:
+	
+	var worktask := ImageThreadWorkerTask.new(callback, "", ImageThreadWorkerTask.WORKER_TASKS.CROP, {
+		"image": image,
+		"size": size,
+		"crop_size": crop_to_size
+	})
+	var worker := select_worker()
+	worker.add_item_to_queue(worktask)
+
+func select_worker() -> ImageThreadWorker:
+	# Find a non working thread
 	
 	for worker in thread_workers:
 		if worker.current_work_item == null:
-			worker.add_item_to_queue(worktask)
-			return
+			return worker
 			
 	# If we have no free worker sample a random one where we assign the work
-	
-	var worker : ImageThreadWorker = thread_workers.pick_random()
-	worker.add_item_to_queue(worktask)
-	
+	return thread_workers.pick_random()
 
 func _entry_path_changed() -> void:
 	clear()
@@ -190,9 +199,14 @@ class ImageThreadWorker extends Resource:
 		# If we are currently working on an item, check if we have finished that, if so clear it
 		if current_work_item != null:
 			if !thread.is_alive():
-				var image := thread.wait_to_finish() as ImageTexture
-
-				current_work_item.callback.call(image)
+				
+				match current_work_item.task:
+					ImageThreadWorkerTask.WORKER_TASKS.LOAD:
+						var image := thread.wait_to_finish() as ImageTexture
+						current_work_item.callback.call(image)
+					ImageThreadWorkerTask.WORKER_TASKS.CROP:
+						var image := thread.wait_to_finish() as Image
+						current_work_item.callback.call(image)
 				
 				current_work_item = null
 				check_for_work()
@@ -202,7 +216,16 @@ class ImageThreadWorker extends Resource:
 				current_work_item = working_queue.pop_back() as ImageThreadWorkerTask
 				thread = Thread.new()
 				
-				thread.start(load_image_texture.bind(current_work_item.path))
+				match current_work_item.task:
+					ImageThreadWorkerTask.WORKER_TASKS.LOAD:
+						thread.start(load_image_texture.bind(current_work_item.path))
+						
+					ImageThreadWorkerTask.WORKER_TASKS.CROP:
+						thread.start(crop_image.bind(
+							current_work_item.data_playload["image"],
+							current_work_item.data_playload["size"],
+							current_work_item.data_playload["crop_size"],
+						))
 				
 	
 	func load_image_texture(path: String) -> ImageTexture:
@@ -214,3 +237,16 @@ class ImageThreadWorker extends Resource:
 			return null
 
 		return ImageTexture.create_from_image(loaded_image)
+		
+	func crop_image(image: Image, rect: Rect2i, size: Vector2i) -> Image:
+		
+		if image == null:
+			return null
+		
+		# Get the region of the image we actually want
+		var new_image := image.get_region(rect)
+		
+		# Now we resize that target region into the crop size we actually want
+		new_image.resize(size.x, size.y, Image.INTERPOLATE_LANCZOS)
+		
+		return new_image

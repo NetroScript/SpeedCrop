@@ -59,6 +59,8 @@ func update_outline() -> void:#
 
 func set_texture() -> void:
 	
+	update_outline()
+	
 	if image_reference == null:
 		return
 		
@@ -70,6 +72,14 @@ func set_texture() -> void:
 	else:
 		texture.texture = preload("res://assets/icons/Image.svg")
 
+func _gui_input(event: InputEvent) -> void:
+	
+	if image_reference == null:
+		return
+	
+	if event is InputEventMouseButton:
+		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			Application.current_active_index = image_reference.index
 	
 func load_image() -> void:
 	

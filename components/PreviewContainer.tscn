@@ -22,6 +22,7 @@ base_font = ExtResource("3_kats2")
 custom_minimum_size = Vector2(0, 80)
 offset_right = 80.0
 offset_bottom = 80.0
+mouse_default_cursor_shape = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_7sarn")
 script = ExtResource("1_7r3w4")
 
