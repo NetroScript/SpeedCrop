@@ -1,8 +1,9 @@
-[gd_scene load_steps=25 format=3 uid="uid://dobe3b68py6dw"]
+[gd_scene load_steps=35 format=3 uid="uid://dobe3b68py6dw"]
 
 [ext_resource type="Theme" uid="uid://bbsoqdy0nn2wf" path="res://Application.theme" id="1_wph70"]
 [ext_resource type="Script" path="res://scripts/ImageScrollManager.gd" id="2_i2scm"]
 [ext_resource type="Script" path="res://scripts/ImageViewManager.gd" id="3_ncvqp"]
+[ext_resource type="Texture2D" uid="uid://dd8vsjtuc2gp1" path="res://assets/icons/NodeInfo.svg" id="6_jy0wp"]
 [ext_resource type="FontFile" uid="uid://dinyhiwiyllcs" path="res://assets/fonts/cantarell/Cantarell-Bold.ttf" id="11_ow6c5"]
 [ext_resource type="Theme" uid="uid://bf7i7i8nhw47o" path="res://FileDialog.theme" id="12_fmmtm"]
 
@@ -46,10 +47,10 @@ expand_margin_right = 1024.0
 expand_margin_bottom = 1024.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4l8n5"]
-content_margin_left = 15.0
-content_margin_top = 15.0
-content_margin_right = 15.0
-content_margin_bottom = 15.0
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 10.0
+content_margin_bottom = 20.0
 bg_color = Color(0.0470588, 0.0470588, 0.0470588, 1)
 corner_radius_top_left = 20
 corner_radius_bottom_left = 20
@@ -101,7 +102,17 @@ func _gui_input(event: InputEvent) -> void:
 			release_focus()
 "
 
-[sub_resource type="Image" id="Image_fy5dq"]
+[sub_resource type="GDScript" id="GDScript_ia5hq"]
+script/source = "extends LineEdit
+
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed and text == \"\":
+			%OpenInput.button_up.emit()
+			
+"
+
+[sub_resource type="Image" id="Image_h8vcc"]
 data = {
 "data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 182, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 180, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 74, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 180, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 179, 179, 179, 180, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 180, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
 "format": "RGBA8",
@@ -111,9 +122,9 @@ data = {
 }
 
 [sub_resource type="ImageTexture" id="ImageTexture_5qvun"]
-image = SubResource("Image_fy5dq")
+image = SubResource("Image_h8vcc")
 
-[sub_resource type="Image" id="Image_e50ko"]
+[sub_resource type="Image" id="Image_s0rlo"]
 data = {
 "data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 182, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 180, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 74, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 180, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 179, 179, 179, 180, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 180, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
 "format": "RGBA8",
@@ -123,9 +134,9 @@ data = {
 }
 
 [sub_resource type="ImageTexture" id="ImageTexture_l3ghj"]
-image = SubResource("Image_e50ko")
+image = SubResource("Image_s0rlo")
 
-[sub_resource type="Image" id="Image_5qtht"]
+[sub_resource type="Image" id="Image_2e5nq"]
 data = {
 "data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 182, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 180, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 74, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 180, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 179, 179, 179, 180, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 180, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
 "format": "RGBA8",
@@ -135,9 +146,9 @@ data = {
 }
 
 [sub_resource type="ImageTexture" id="ImageTexture_d26b2"]
-image = SubResource("Image_5qtht")
+image = SubResource("Image_2e5nq")
 
-[sub_resource type="Image" id="Image_rf2fo"]
+[sub_resource type="Image" id="Image_o025a"]
 data = {
 "data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 182, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 180, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 74, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 180, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 179, 179, 179, 180, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 180, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
 "format": "RGBA8",
@@ -147,9 +158,9 @@ data = {
 }
 
 [sub_resource type="ImageTexture" id="ImageTexture_k337y"]
-image = SubResource("Image_rf2fo")
+image = SubResource("Image_o025a")
 
-[sub_resource type="Image" id="Image_bvucs"]
+[sub_resource type="Image" id="Image_44ovq"]
 data = {
 "data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 182, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 180, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 74, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 180, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 255, 255, 255, 0, 255, 255, 255, 0, 179, 179, 179, 180, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 178, 178, 178, 255, 179, 179, 179, 180, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
 "format": "RGBA8",
@@ -159,7 +170,7 @@ data = {
 }
 
 [sub_resource type="ImageTexture" id="ImageTexture_1xgt4"]
-image = SubResource("Image_bvucs")
+image = SubResource("Image_44ovq")
 
 [sub_resource type="GDScript" id="GDScript_vbuka"]
 script/source = "extends TextureButton
@@ -204,6 +215,89 @@ func _gui_input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		if event.keycode == KEY_ESCAPE and has_focus():
 			release_focus()
+"
+
+[sub_resource type="GDScript" id="GDScript_boj16"]
+script/source = "extends LineEdit
+
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed and text == \"\":
+			%OpenOutput.button_up.emit()
+			
+"
+
+[sub_resource type="GDScript" id="GDScript_m1fpl"]
+script/source = "extends TextureButton
+
+@onready
+var file_dialog : FileDialog = %OutputData
+@onready
+var output_path : LineEdit = %OutputPath
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	button_up.connect(
+		func():
+			if not file_dialog.visible:
+				file_dialog.popup_centered()
+	)
+	
+	file_dialog.dir_selected.connect(
+		func(dir: String):
+			output_path.text = dir
+			Application.output_path = dir
+			release_focus()
+	)
+
+"
+
+[sub_resource type="GDScript" id="GDScript_fel12"]
+script/source = "extends TextureButton
+
+@onready 
+var template_popup : Popup = %TemplateInfo 
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	button_up.connect(
+		func():
+			if not template_popup.visible:
+				template_popup.popup_centered()
+	)
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xetpg"]
+content_margin_left = 20.0
+content_margin_top = 20.0
+content_margin_right = 20.0
+content_margin_bottom = 20.0
+bg_color = Color(0.0392157, 0.0392157, 0.0392157, 1)
+border_blend = true
+corner_radius_bottom_right = 25
+corner_radius_bottom_left = 25
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mypys"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_uhmb4"]
+
+[sub_resource type="GDScript" id="GDScript_0fh8v"]
+script/source = "extends LineEdit
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	text = Application.output_template
+	
+	text_changed.connect(func(text: String): Application.output_template = text)
+"
+
+[sub_resource type="GDScript" id="GDScript_1spps"]
+script/source = "extends OptionButton
+
+func _ready() -> void:
+	item_selected.connect(func(index: int): Application.current_file_format = index)
+
 "
 
 [sub_resource type="GDScript" id="GDScript_3bsag"]
@@ -292,12 +386,17 @@ custom_minimum_size = Vector2(250, 0)
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_4l8n5")
 
-[node name="MainPanel" type="VBoxContainer" parent="HSplitContainer/SideMenu"]
+[node name="ScrollContainer" type="ScrollContainer" parent="HSplitContainer/SideMenu"]
+layout_mode = 2
+horizontal_scroll_mode = 3
+
+[node name="MainPanel" type="VBoxContainer" parent="HSplitContainer/SideMenu/ScrollContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/separation = 16
 
-[node name="Header" type="Label" parent="HSplitContainer/SideMenu/MainPanel"]
+[node name="Header" type="Label" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel"]
 layout_mode = 2
 theme_override_fonts/font = ExtResource("11_ow6c5")
 theme_override_font_sizes/font_size = 24
@@ -305,16 +404,20 @@ text = "Settings"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="CropWidth" type="HBoxContainer" parent="HSplitContainer/SideMenu/MainPanel"]
+[node name="HSeparator" type="HSeparator" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="CropWidth" type="HBoxContainer" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HSplitContainer/SideMenu/MainPanel/CropWidth"]
+[node name="Label" type="Label" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/CropWidth"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Width:"
 autowrap_mode = 2
 
-[node name="Width" type="SpinBox" parent="HSplitContainer/SideMenu/MainPanel/CropWidth"]
+[node name="Width" type="SpinBox" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/CropWidth"]
 layout_mode = 2
 max_value = 65536.0
 alignment = 1
@@ -322,16 +425,16 @@ update_on_text_changed = true
 custom_arrow_step = 64.0
 script = SubResource("GDScript_rap77")
 
-[node name="CropHeight" type="HBoxContainer" parent="HSplitContainer/SideMenu/MainPanel"]
+[node name="CropHeight" type="HBoxContainer" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HSplitContainer/SideMenu/MainPanel/CropHeight"]
+[node name="Label" type="Label" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/CropHeight"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Height:"
 autowrap_mode = 2
 
-[node name="Height" type="SpinBox" parent="HSplitContainer/SideMenu/MainPanel/CropHeight"]
+[node name="Height" type="SpinBox" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/CropHeight"]
 layout_mode = 2
 max_value = 65536.0
 alignment = 1
@@ -339,17 +442,21 @@ update_on_text_changed = true
 custom_arrow_step = 64.0
 script = SubResource("GDScript_xdud2")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer/SideMenu/MainPanel"]
+[node name="HSeparator2" type="HSeparator" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel"]
 layout_mode = 2
 
-[node name="InputPathLabel" type="Label" parent="HSplitContainer/SideMenu/MainPanel/VBoxContainer"]
+[node name="InputPathLabel" type="Label" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/VBoxContainer"]
 layout_mode = 2
 text = "Input Path:"
 
-[node name="InputContainer" type="HBoxContainer" parent="HSplitContainer/SideMenu/MainPanel/VBoxContainer"]
+[node name="InputContainer" type="HBoxContainer" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/VBoxContainer"]
 layout_mode = 2
 
-[node name="InputPath" type="LineEdit" parent="HSplitContainer/SideMenu/MainPanel/VBoxContainer/InputContainer"]
+[node name="InputPath" type="LineEdit" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/VBoxContainer/InputContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
@@ -358,8 +465,10 @@ editable = false
 context_menu_enabled = false
 virtual_keyboard_enabled = false
 clear_button_enabled = true
+script = SubResource("GDScript_ia5hq")
 
-[node name="TextureButton" type="TextureButton" parent="HSplitContainer/SideMenu/MainPanel/VBoxContainer/InputContainer"]
+[node name="OpenInput" type="TextureButton" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/VBoxContainer/InputContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 mouse_default_cursor_shape = 2
 theme = ExtResource("12_fmmtm")
@@ -371,11 +480,11 @@ texture_focused = SubResource("ImageTexture_1xgt4")
 stretch_mode = 5
 script = SubResource("GDScript_vbuka")
 
-[node name="InputData" type="FileDialog" parent="HSplitContainer/SideMenu/MainPanel/VBoxContainer/InputContainer/TextureButton"]
+[node name="InputData" type="FileDialog" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/VBoxContainer/InputContainer/OpenInput"]
 unique_name_in_owner = true
 transparent_bg = true
 initial_position = 1
-title = "Select the folder"
+title = "Select the input folder"
 size = Vector2i(600, 500)
 current_screen = -2
 transient = false
@@ -387,21 +496,182 @@ mode_overrides_title = false
 file_mode = 2
 access = 2
 
-[node name="RecursiveContainer" type="HBoxContainer" parent="HSplitContainer/SideMenu/MainPanel"]
+[node name="RecursiveContainer" type="HBoxContainer" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="HSplitContainer/SideMenu/MainPanel/RecursiveContainer"]
+[node name="Label" type="Label" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/RecursiveContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Recursively load subdirectories:"
 autowrap_mode = 2
 
-[node name="Recursive" type="CheckButton" parent="HSplitContainer/SideMenu/MainPanel/RecursiveContainer"]
+[node name="Recursive" type="CheckButton" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/RecursiveContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 alignment = 1
 icon_alignment = 1
 script = SubResource("GDScript_iyy15")
+
+[node name="HSeparator3" type="HSeparator" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel"]
+layout_mode = 2
+
+[node name="OutputPathLabel" type="Label" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/VBoxContainer2"]
+layout_mode = 2
+text = "Output Path:"
+
+[node name="OutputContainer" type="HBoxContainer" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/VBoxContainer2"]
+layout_mode = 2
+
+[node name="OutputPath" type="LineEdit" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/VBoxContainer2/OutputContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Path not yet selected"
+editable = false
+context_menu_enabled = false
+virtual_keyboard_enabled = false
+clear_button_enabled = true
+script = SubResource("GDScript_boj16")
+
+[node name="OpenOutput" type="TextureButton" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/VBoxContainer2/OutputContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme = ExtResource("12_fmmtm")
+texture_normal = SubResource("ImageTexture_5qvun")
+texture_pressed = SubResource("ImageTexture_l3ghj")
+texture_hover = SubResource("ImageTexture_d26b2")
+texture_disabled = SubResource("ImageTexture_k337y")
+texture_focused = SubResource("ImageTexture_1xgt4")
+stretch_mode = 5
+script = SubResource("GDScript_m1fpl")
+
+[node name="OutputData" type="FileDialog" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/VBoxContainer2/OutputContainer/OpenOutput"]
+unique_name_in_owner = true
+transparent_bg = true
+initial_position = 1
+title = "Select the output folder"
+size = Vector2i(600, 500)
+current_screen = -2
+transient = false
+always_on_top = true
+transparent = true
+min_size = Vector2i(500, 500)
+ok_button_text = "Select Current Folder"
+mode_overrides_title = false
+file_mode = 2
+access = 2
+
+[node name="TemplateContainer" type="VBoxContainer" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/TemplateContainer"]
+layout_mode = 2
+
+[node name="TemplatePathLabel" type="Label" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/TemplateContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Template Path:"
+
+[node name="TextureButton" type="TextureButton" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/TemplateContainer/HBoxContainer"]
+layout_mode = 2
+mouse_default_cursor_shape = 2
+theme = ExtResource("12_fmmtm")
+texture_normal = ExtResource("6_jy0wp")
+texture_pressed = ExtResource("6_jy0wp")
+texture_hover = ExtResource("6_jy0wp")
+texture_disabled = ExtResource("6_jy0wp")
+texture_focused = ExtResource("6_jy0wp")
+stretch_mode = 3
+script = SubResource("GDScript_fel12")
+
+[node name="TemplateInfo" type="Popup" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/TemplateContainer/HBoxContainer/TextureButton"]
+unique_name_in_owner = true
+transparent_bg = true
+initial_position = 1
+title = "Template Information"
+size = Vector2i(640, 408)
+current_screen = -2
+unresizable = false
+borderless = false
+always_on_top = true
+transparent = true
+min_size = Vector2i(600, 365)
+
+[node name="PanelContainer" type="PanelContainer" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/TemplateContainer/HBoxContainer/TextureButton/TemplateInfo"]
+custom_minimum_size = Vector2(600, 365)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_xetpg")
+metadata/_edit_use_anchors_ = true
+
+[node name="CenterContainer" type="CenterContainer" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/TemplateContainer/HBoxContainer/TextureButton/TemplateInfo/PanelContainer"]
+custom_minimum_size = Vector2(600, 365)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/TemplateContainer/HBoxContainer/TextureButton/TemplateInfo/PanelContainer/CenterContainer"]
+custom_minimum_size = Vector2(600, 365)
+layout_mode = 2
+focus_mode = 2
+theme_override_styles/focus = SubResource("StyleBoxEmpty_mypys")
+theme_override_styles/normal = SubResource("StyleBoxEmpty_uhmb4")
+bbcode_enabled = true
+text = "[b]The following template strings are available:[/b]
+
+[color=#697dff]{directory_tree}[/color] - The relative folder tree to the original image
+[color=#697dff]{file}[/color] - The filename (without extension)
+[color=#697dff]{extension}[/color] - The file extension
+[color=#697dff]{index}[/color] - The index the image had in this application
+[color=#697dff]{width}[/color] - The width at which it was cropped
+[color=#697dff]{height}[/color] - The height at which it was cropped
+[color=#697dff]{rotations}[/color] - How often the image was rotated 
+                       (negative = counterclockwise, positive=clockwise)
+[color=#697dff]{rect.x}[/color] - The cropped area top left x position (in the original image)
+[color=#697dff]{rect.y}[/color] - The cropped area top left y position (in the original image)
+[color=#697dff]{rect.width}[/color] - How wide the cropped area originally was
+[color=#697dff]{rect.height}[/color] - How high the cropped area originally was
+
+Folders will be automatically created. Existing files will be overwritten."
+fit_content_height = true
+selection_enabled = true
+
+[node name="LineEdit" type="LineEdit" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/TemplateContainer"]
+layout_mode = 2
+context_menu_enabled = false
+script = SubResource("GDScript_0fh8v")
+
+[node name="FileFormatContainer" type="VBoxContainer" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/FileFormatContainer"]
+layout_mode = 2
+text = "Select the file format:"
+
+[node name="SelectFileFormat" type="OptionButton" parent="HSplitContainer/SideMenu/ScrollContainer/MainPanel/FileFormatContainer"]
+layout_mode = 2
+alignment = 1
+item_count = 4
+selected = 0
+popup/item_0/text = "Same as Input"
+popup/item_0/id = 0
+popup/item_1/text = "PNG"
+popup/item_1/id = 1
+popup/item_2/text = "JPG"
+popup/item_2/id = 2
+popup/item_3/text = "WEBP"
+popup/item_3/id = 3
+script = SubResource("GDScript_1spps")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 layout_mode = 2

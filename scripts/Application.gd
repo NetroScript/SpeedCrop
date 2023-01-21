@@ -15,10 +15,20 @@ signal active_item_changed(item: ProcessedImage)
 
 signal crop_size_changed(size: Vector2i)
 
+
+enum FILE_FORMATS {SAME_AS_INPUT = 0, PNG = 1, JPEG = 2, WEBP = 3}
+
+
 var currently_loaded_files: Array[ProcessedImage] = []
 
 var current_loading_index := 0
 var currently_active_item: ProcessedImage
+
+var output_path: String = ""
+var current_file_format : FILE_FORMATS = FILE_FORMATS.SAME_AS_INPUT
+
+# Possible entries {directory_tree}, {file},{extension}, {index}, {width}, {height}, {rotations}, {rect.x}, {rect.y}, {rect.width}, {rect.height}
+var output_template: String = "{directory_tree}{file}.{extension}"
 
 var crop_to_size: Vector2i = Vector2i(512,512) : 
 	set(value): 
@@ -51,6 +61,7 @@ var entry_path: String = "" :
 		entry_path = value
 		if different:
 			_entry_path_changed()
+
 			
 func _ready() -> void:
 	

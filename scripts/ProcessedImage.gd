@@ -11,6 +11,7 @@ var source_path: String
 var processed_path: String
 var is_currently_loaded := false 
 var was_already_exported := false
+var relative_path: String
 
 var original_texture : Texture2D = null 
 var preview_texture : Texture2D = null
@@ -30,6 +31,7 @@ var is_active: bool = false :
 func _init(index: int, source_path: String) -> void:
 	self.index = index 
 	self.source_path = source_path
+	self.relative_path = source_path.replace(Application.entry_path, "")
 
 func load_image() -> void:
 
