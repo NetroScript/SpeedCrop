@@ -12,7 +12,7 @@ var label: Label = %Label
 @onready
 var texture : TextureRect = %Texture
 
-var is_active: bool = false
+var stylebox: StyleBoxFlat
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -21,7 +21,9 @@ func _ready() -> void:
 		image_reference.was_loaded.connect(set_texture)
 		image_reference.was_exported.connect(set_texture)
 		image_reference.was_unloaded.connect(set_texture)
+		image_reference.active_changed.connect(update_outline)
 
+	stylebox = get("theme_override_styles/panel")
 	
 	# Set the context of the Label to our image_reference index
 	update_label()
@@ -39,14 +41,26 @@ func update_label() -> void:
 		label.text = str(image_reference.index) + " - " + image_reference.get_file_name()
 	else:
 		label.text = str(image_reference.index)
+		
+func update_outline() -> void:#
+	
+	if image_reference == null:
+		return
+	
+	if image_reference.is_active:
+		stylebox.bg_color = Color(0.2, 0.2, 0.2)
+	else:
+		stylebox.bg_color = Color(0.1, 0.1, 0.1)
+
+		
+	if image_reference.was_already_exported:
+		stylebox.border_color = Color(0.0247, 0.3438, 0.1081)
+	
 
 func set_texture() -> void:
 	
 	if image_reference == null:
 		return
-		
-	if image_reference.was_already_exported:
-		pass
 		
 	if image_reference.preview_texture != null:
 		texture.texture = image_reference.preview_texture

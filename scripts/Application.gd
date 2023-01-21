@@ -11,9 +11,30 @@ signal new_files_loaded
 signal load_subdirectories_changed(flag: bool)
 signal path_invalid(error: int)
 
+signal active_item_changed(item: ProcessedImage)
+
+signal crop_size_changed(size: Vector2i)
+
 var currently_loaded_files: Array[ProcessedImage] = []
 
-var current_index := 0
+var current_loading_index := 0
+var currently_active_item: ProcessedImage
+
+var crop_to_size: Vector2i = Vector2i(512,512) : 
+	set(value): 
+		crop_to_size = value 
+		crop_size_changed.emit(value)
+
+var current_active_index := -1 : 
+	set(value):
+		if current_active_index > -1 and currently_active_item:
+			currently_active_item.is_active = false
+		
+		if value > -1 and value < currently_loaded_files.size():
+			current_active_index = value 
+			currently_active_item = currently_loaded_files[current_active_index]
+			active_item_changed.emit(currently_active_item)
+			currently_active_item.is_active = true
 
 var thread_polling_timer: Timer
 var thread_workers: Array[ImageThreadWorker] = []
@@ -46,8 +67,6 @@ func _ready() -> void:
 	thread_polling_timer.timeout.connect(_poll_threads)
 	thread_polling_timer.paused = false
 	thread_polling_timer.start()
-
-	
 	
 func _poll_threads() -> void:
 	
@@ -94,16 +113,16 @@ func _entry_path_changed() -> void:
 	# Now create the ProcessedImages instances
 	for file_path in file_list:
 		
-		var image := ProcessedImage.new(current_index, file_path)
+		var image := ProcessedImage.new(current_loading_index, file_path)
 		currently_loaded_files.append(image)
-		current_index += 1
+		current_loading_index += 1
 		
 	new_files_loaded.emit()
 	
 func clear() -> void:
 	pre_clear.emit()
 	currently_loaded_files.clear()
-	current_index = 0
+	current_loading_index = 0
 	post_clear.emit()
 
 class ImageThreadWorkerTask extends Resource:

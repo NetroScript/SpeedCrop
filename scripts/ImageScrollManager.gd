@@ -128,3 +128,4 @@ func _process(delta: float) -> void:
 			
 		if preview_list.size() == Application.currently_loaded_files.size():
 			filling_images = false
+			Application.current_active_index = 0

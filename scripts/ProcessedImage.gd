@@ -5,6 +5,8 @@ signal was_exported
 signal was_loaded
 signal was_unloaded
 
+signal active_changed
+
 var source_path: String
 var processed_path: String
 var is_currently_loaded := false 
@@ -16,6 +18,11 @@ var preview_texture : Texture2D = null
 var index: int = 0
 
 var is_loading_image: bool = false
+
+var is_active: bool = false :
+	set(value):
+		is_active = value
+		active_changed.emit()
 
 func _init(index: int, source_path: String) -> void:
 	self.index = index 
