@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3 uid="uid://dobe3b68py6dw"]
+[gd_scene load_steps=25 format=3 uid="uid://dobe3b68py6dw"]
 
 [ext_resource type="Theme" uid="uid://bbsoqdy0nn2wf" path="res://Application.theme" id="1_wph70"]
 [ext_resource type="Script" path="res://scripts/ImageScrollManager.gd" id="2_i2scm"]
@@ -206,6 +206,17 @@ func _gui_input(event: InputEvent) -> void:
 			release_focus()
 "
 
+[sub_resource type="GDScript" id="GDScript_3bsag"]
+script/source = "extends RichTextLabel
+
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		if not event.pressed:
+			if event.keycode == KEY_F1:
+				visible = !visible
+"
+
 [node name="MainPanel" type="PanelContainer"]
 anchors_preset = 15
 anchor_right = 1.0
@@ -391,3 +402,40 @@ layout_mode = 2
 alignment = 1
 icon_alignment = 1
 script = SubResource("GDScript_iyy15")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 10
+
+[node name="Label" type="RichTextLabel" parent="MarginContainer"]
+visible = false
+layout_mode = 2
+size_flags_vertical = 0
+mouse_filter = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 5
+theme_override_font_sizes/normal_font_size = 13
+theme_override_font_sizes/bold_font_size = 15
+bbcode_enabled = true
+text = "[b]Keyboard and Mouse Controls[/b]:
+
+	F1						- 	Toggle this menu
+	Space / Right	-	Move to next image
+	Left						-	Move to previous image	
+	Q							- 	Rotate image counterclockwise
+	R							- 	Rotate image clockwise
+	ESC						-	Unfocus GUI element
+
+Mouse in the main Area:
+
+	Mouse Wheel		-	Zoom in / out at mouse position
+	Right Click, Drag	-	Zoom in / out, x coordinate is a bit slower than y coordinate
+	Left Click, Pan		-	Move the selected area
+
+"
+fit_content_height = true
+script = SubResource("GDScript_3bsag")

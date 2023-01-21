@@ -28,6 +28,8 @@ func _ready() -> void:
 	
 	resized.connect(func(): old_scroll_position = -1)
 	
+	Application.active_item_changed.connect(func(item: ProcessedImage): scroll_horizontal = (item.index - (visible_items / 2)) * item_width)
+	
 	image_update_timer = Timer.new()
 	image_update_timer.wait_time = 0.25
 	add_child(image_update_timer)
