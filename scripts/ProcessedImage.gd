@@ -19,6 +19,8 @@ var index: int = 0
 
 var is_loading_image: bool = false
 
+var exported_section: Rect2i = Rect2i()
+
 var is_active: bool = false :
 	set(value):
 		is_active = value
@@ -45,7 +47,17 @@ func load_image() -> void:
 			was_loaded.emit()
 			is_loading_image = false
 	)
-		
+
+func rotate(direction: int) -> void:
+	if original_texture == null:
+		return 
+	
+	var new_image = original_texture.get_image()
+	new_image.rotate_90(direction)
+	
+	original_texture = ImageTexture.create_from_image(new_image)
+	
+	was_loaded.emit()
 
 func unload_image() -> bool:
 	
@@ -56,10 +68,21 @@ func unload_image() -> bool:
 	
 	return false
 	
-func export_image(position: Rect2) -> bool:
+func export_image(position: Rect2i) -> bool:
 	
-	was_already_exported = true
-	was_exported.emit()
+	exported_section = position
+	
+	# We now have our image section, where we extract a new image
+	if original_texture != null:
+		var new_image := original_texture.get_image().get_region(position)
+		
+		# Now we resize that target region into the crop size we actually want
+		new_image.resize(Application.crop_to_size.x, Application.crop_to_size.y, Image.INTERPOLATE_LANCZOS)
+		
+		preview_texture = ImageTexture.create_from_image(new_image)
+	
+		was_already_exported = true
+		was_exported.emit()
 	return false
 
 func get_file_name() -> String:

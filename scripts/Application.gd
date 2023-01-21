@@ -68,6 +68,36 @@ func _ready() -> void:
 	thread_polling_timer.paused = false
 	thread_polling_timer.start()
 	
+func _unhandled_key_input(e: InputEvent) -> void:
+	var event: InputEventKey = e as InputEventKey
+	
+	if event == null:
+		return
+	
+	
+	# Do not do these actions when the GUI has something in focus
+	# So check if currently any GUI has focus
+	if get_viewport().gui_get_focus_owner() != null:
+		return
+	
+	if not event.pressed:
+	
+		# If the event is either Space or right key, go to the next image
+		if event.keycode == KEY_SPACE || event.keycode == KEY_RIGHT:
+			current_active_index += 1
+		elif event.keycode == KEY_LEFT:
+			current_active_index -= 1
+		
+		if currently_active_item:
+			
+			# Allow rotating an image
+			if event.keycode == KEY_Q:
+				currently_active_item.rotate(COUNTERCLOCKWISE)
+				current_active_index = current_active_index
+			if event.keycode == KEY_E:
+				currently_active_item.rotate(CLOCKWISE)
+				current_active_index = current_active_index
+	
 func _poll_threads() -> void:
 	
 	for worker in thread_workers:
@@ -126,12 +156,19 @@ func clear() -> void:
 	post_clear.emit()
 
 class ImageThreadWorkerTask extends Resource:
+	
+	enum WORKER_TASKS {LOAD, STORE, CROP}
+	
 	var callback: Callable
 	var path: String 
+	var task: WORKER_TASKS
+	var data_playload : Dictionary
 	
-	func _init(callback: Callable, path: String) -> void:
+	func _init(callback: Callable, path: String, task: WORKER_TASKS = WORKER_TASKS.LOAD, payload: Dictionary = {}) -> void:
 		self.path = path
 		self.callback = callback
+		self.task = task
+		self.data_playload = payload
 
 class ImageThreadWorker extends Resource:
 	

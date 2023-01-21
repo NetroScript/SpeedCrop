@@ -18,8 +18,31 @@ func _ready() -> void:
 func update_image(image: ProcessedImage) -> void:
 
 	if current_image != null:
-		current_image.was_loaded.disconnect(update_image.bind(image))
-	
+		
+		if current_image.was_loaded.is_connected(update_image.bind(image)):
+			current_image.was_loaded.disconnect(update_image.bind(image))
+		
+		if current_image != image:
+			# Store our cropping state in the old image
+			# For that pass in the Rect2i which would describe the sub section of the image
+			var image_section_size : Vector2 = cutout_area.size / scale
+			
+			# Next is our top left position of the rect
+			# As our internal position always starts of center, we start at the center too, subtract half our size
+			# and then we offset that by our custom additional offset
+			var image_position : Vector2 = size/2 - image_section_size/2 + additional_offset/scale
+			
+			# If the image position is less than 0,0 we clamp it
+			if image_position.x < 0:
+				image_position.x = 0
+			if image_position.y < 0:
+				image_position.y = 0
+			
+			
+			# Now pass on that subrect
+			current_image.export_image(Rect2i(image_position, image_section_size))
+
+
 	current_image = image
 	
 	if image.original_texture == null:
@@ -27,6 +50,17 @@ func update_image(image: ProcessedImage) -> void:
 		image.was_loaded.connect(update_image.bind(image))
 	
 	texture = image.original_texture
+	
+
+	update_positions()
+	
+	# If we already previously loaded and unloaded the image, restore the zoom position we had 
+	if image.was_already_exported:
+		scale = cutout_area.size / Vector2(image.exported_section.size)
+		additional_offset = -(size/2 - Vector2(image.exported_section.size)/2 - Vector2(image.exported_section.position)) * scale
+	
+	
+	clamp_position()
 
 func update_positions() -> void:
 	if texture == null:
@@ -49,8 +83,12 @@ func update_positions() -> void:
 	minimum_zoom = scale_tmp
 	scale = Vector2(scale_tmp, scale_tmp)
 	
-func _input(event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	
+	# Get the current mouse pointer and only containue if it is the moving cursor
+	# (Poverty fix to prevent actions outside this area affecting this)
+	if Input.get_current_cursor_shape() != Input.CURSOR_MOVE:
+		return
 	
 	# Check for mouse events to update the position
 	
@@ -115,5 +153,5 @@ func clamp_position() -> void:
 		additional_offset.x = space_available_from_center.x * sign(additional_offset.x)
 	if abs(additional_offset.y) > space_available_from_center.y:
 		additional_offset.y = space_available_from_center.y * sign(additional_offset.y)
-	
+		
 	position = -additional_offset
