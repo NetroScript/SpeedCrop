@@ -24,7 +24,7 @@ var currently_loaded_files: Array[ProcessedImage] = []
 var current_loading_index := 0
 var currently_active_item: ProcessedImage
 
-var output_path: String = ""
+var output_path: String = "./"
 var current_file_format : FILE_FORMATS = FILE_FORMATS.SAME_AS_INPUT
 
 # Possible entries {directory_tree}, {file},{extension}, {index}, {width}, {height}, {rotations}, {rect.x}, {rect.y}, {rect.width}, {rect.height}
@@ -45,6 +45,11 @@ var current_active_index := -1 :
 			currently_active_item = currently_loaded_files[current_active_index]
 			active_item_changed.emit(currently_active_item)
 			currently_active_item.is_active = true
+			return
+			
+		# If we are at the last item, emit it again so that it gets saved
+		if value == currently_loaded_files.size():
+			active_item_changed.emit(currently_active_item)
 
 var thread_polling_timer: Timer
 var thread_workers: Array[ImageThreadWorker] = []
@@ -127,6 +132,14 @@ func threaded_crop_image(image: Image, size: Rect2i, callback: Callable) -> void
 		"image": image,
 		"size": size,
 		"crop_size": crop_to_size
+	})
+	var worker := select_worker()
+	worker.add_item_to_queue(worktask)
+	
+func threaded_save_image(image: Image, path: String, callback: Callable) -> void:
+	
+	var worktask := ImageThreadWorkerTask.new(callback, path, ImageThreadWorkerTask.WORKER_TASKS.STORE, {
+		"image": image,
 	})
 	var worker := select_worker()
 	worker.add_item_to_queue(worktask)
@@ -218,6 +231,9 @@ class ImageThreadWorker extends Resource:
 					ImageThreadWorkerTask.WORKER_TASKS.CROP:
 						var image := thread.wait_to_finish() as Image
 						current_work_item.callback.call(image)
+					ImageThreadWorkerTask.WORKER_TASKS.STORE:
+						var status := thread.wait_to_finish() as int
+						current_work_item.callback.call(status)
 				
 				current_work_item = null
 				check_for_work()
@@ -236,6 +252,12 @@ class ImageThreadWorker extends Resource:
 							current_work_item.data_playload["image"],
 							current_work_item.data_playload["size"],
 							current_work_item.data_playload["crop_size"],
+						))
+					
+					ImageThreadWorkerTask.WORKER_TASKS.STORE:
+						thread.start(save_image.bind(
+							current_work_item.data_playload["image"],
+							current_work_item.path
 						))
 				
 	
@@ -261,3 +283,22 @@ class ImageThreadWorker extends Resource:
 		new_image.resize(size.x, size.y, Image.INTERPOLATE_LANCZOS)
 		
 		return new_image
+
+	func save_image(image: Image, path: String) -> int:
+		
+		# Get the extension of our image
+		var extension := path.get_extension().to_lower()
+		
+		# Recursively ensure that the directory exists
+		DirAccess.make_dir_recursive_absolute(path.get_base_dir())
+		
+		# Based on the extension call the different saving routines
+		match extension:
+			"png":
+				return image.save_png(path)
+			"jpg", "jpeg":
+				return image.save_jpg(path, 0.8)
+			"webp":
+				return image.save_webp(path)
+		
+		return 0
