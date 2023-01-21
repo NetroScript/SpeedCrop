@@ -6,6 +6,8 @@
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kx105"]
 resource_local_to_scene = true
+content_margin_left = 2.0
+content_margin_right = 2.0
 bg_color = Color(0.109804, 0.109804, 0.109804, 1)
 border_width_left = 1
 border_width_top = 1

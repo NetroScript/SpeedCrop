@@ -12,6 +12,8 @@ var label: Label = %Label
 @onready
 var texture : TextureRect = %Texture
 
+var is_active: bool = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	
@@ -23,8 +25,6 @@ func _ready() -> void:
 	
 	# Set the context of the Label to our image_reference index
 	update_label()
-	# Update image
-	load_image()
 	
 	resized.connect(update_label)
 
@@ -45,6 +45,9 @@ func set_texture() -> void:
 	if image_reference == null:
 		return
 		
+	if image_reference.was_already_exported:
+		pass
+		
 	if image_reference.preview_texture != null:
 		texture.texture = image_reference.preview_texture
 		
@@ -60,3 +63,12 @@ func load_image() -> void:
 		return
 		
 	image_reference.load_image()
+	
+func unload_image() -> void:
+	
+	texture.texture = preload("res://assets/icons/Image.svg")
+	
+	if image_reference == null:
+		return
+		
+	image_reference.unload_image()

@@ -23,6 +23,9 @@ func _init(index: int, source_path: String) -> void:
 
 func load_image() -> void:
 
+	if original_texture != null and preview_texture != null:
+		return
+
 	if is_loading_image:
 		return
 
@@ -39,12 +42,16 @@ func load_image() -> void:
 
 func unload_image() -> bool:
 	
+	original_texture = null
+	preview_texture = null
+	
 	was_unloaded.emit()
 	
 	return false
 	
 func export_image(position: Rect2) -> bool:
 	
+	was_already_exported = true
 	was_exported.emit()
 	return false
 

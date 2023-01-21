@@ -150,10 +150,11 @@ class ImageThreadWorker extends Resource:
 				
 	
 	func load_image_texture(path: String) -> ImageTexture:
-			
-		var loaded_image := Image.load_from_file(path)
-
-		if loaded_image:
-			return ImageTexture.create_from_image(loaded_image)
 		
-		return null
+		var loaded_image := Image.new()
+		var error := loaded_image.load(path)
+		
+		if error != OK:
+			return null
+
+		return ImageTexture.create_from_image(loaded_image)
