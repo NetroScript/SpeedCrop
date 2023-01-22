@@ -11,9 +11,13 @@ config_version=5
 [application]
 
 config/name="SpeedCrop"
+config/description="SpeedCrop is a Godot-based application for quickly cropping many images in a folder to a specific resolution with an intuitive user interface and support for various image file formats."
 run/main_scene="res://MainApplication.tscn"
 config/features=PackedStringArray("4.0", "Forward Plus")
-config/icon="res://icon.svg"
+run/low_processor_mode=true
+config/icon="res://icon.png"
+config/macos_native_icon="res://icon.icns"
+config/windows_native_icon="res://icon.ico"
 
 [autoload]
 
