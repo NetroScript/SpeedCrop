@@ -26,7 +26,3 @@ Application="*res://scripts/Application.gd"
 [dotnet]
 
 project/assembly_name="SpeedCrop"
-
-[editor]
-
-export/convert_text_resources_to_binary=true

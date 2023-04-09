@@ -50,8 +50,28 @@ func load_image() -> void:
 	Application.threaded_load_image(
 		source_path,
 		func(image: ImageTexture): 
-			original_texture = image
+
 			is_loading_images -= 1
+			
+			# If this image should be rotated, rotate it again after loading
+			if total_rotations != 0:
+
+				# As we want to be a tiny bit more performant than the rotate function
+				# we execute it inline instead of calling the function
+				# Map -1 and 1 to 0 and 1
+				var direction: int = (-sign(total_rotations) + 1) / 2
+				# This allows us to rotate it multiple times in a row without creating
+				# ImageTextures and new images
+				var image_reference := image.get_image()
+				# We can modulus 4 as doing more than 3 rotations will lead to states which 
+				# we already had before
+				for i in range(abs(total_rotations) % 4):
+					image_reference.rotate_90(direction)
+					
+				original_texture = ImageTexture.create_from_image(image_reference)
+			else:
+				original_texture = image
+				
 			if is_loading_images == 0:
 				was_loaded.emit()
 	)
@@ -70,9 +90,10 @@ func rotate(direction: int) -> void:
 	if original_texture == null:
 		return 
 	
+	# map 0 and 1 to -1 and 1
 	total_rotations -= direction * 2 - 1 
 	
-	var new_image = original_texture.get_image()
+	var new_image := original_texture.get_image()
 	new_image.rotate_90(direction)
 	
 	original_texture = ImageTexture.create_from_image(new_image)
